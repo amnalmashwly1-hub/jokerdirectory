@@ -18,19 +18,21 @@
             margin: auto; 
         }
 
+        /* جعل البطاقة قابلة للضغط بالكامل */
+        .channel-link { text-decoration: none; color: inherit; display: block; }
+
         .channel-card { 
             background: var(--card-bg); 
             border: 1px solid #333; 
             border-radius: 15px; 
             padding: 20px; 
             transition: 0.3s; 
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
         }
 
         .channel-card:hover { 
             border-color: var(--neon); 
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); 
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); 
             transform: translateY(-5px);
         }
 
@@ -49,14 +51,10 @@
             display: inline-block; 
             background: var(--neon); 
             color: black; 
-            text-decoration: none; 
             padding: 10px 25px; 
             border-radius: 25px; 
             font-weight: bold; 
-            transition: 0.3s;
         }
-
-        .btn-join:hover { box-shadow: 0 0 15px var(--neon); transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -65,8 +63,16 @@
 
     <div class="channels-grid">
         
-        <div class="channel-card">
-            <img class="ch-img" src="https://pps.whatsapp.net/v/t61.24694-24/415560942_1113645853158085_5836262453538466657_n.jpg?ccb=11-4&oh=01_Q5AaIAn0S_3M6Ww_C7Kq6m9I7XhRjX_T5-D0L7X0-C0D0&_nc_sid=e6ed6c&_nc_cat=101" alt="قناة نكت">
-            <h2 class="ch-name">نكت وصور مضحكة 😂</h2>
-            <p class="ch-desc">أقوى النكت والصور المضحكة يومياً.. اضحك من قلبك وانسى الهموم معنا!</p>
-            <a href="
+        <a href="https://whatsapp.com/channel/0029VaFDOVyGE56kJdojZ21y" target="_blank" class="channel-link">
+            <div class="channel-card">
+                <img class="ch-img" src="https://pps.whatsapp.net/v/t61.24694-24/415560942_1113645853158085_5836262453538466657_n.jpg?ccb=11-4&oh=01_Q5AaIAn0S_3M6Ww_C7Kq6m9I7XhRjX_T5-D0L7X0-C0D0&_nc_sid=e6ed6c&_nc_cat=101" alt="قناة نكت">
+                <h2 class="ch-name">نكت وصور مضحكة 😂</h2>
+                <p class="ch-desc">أقوى النكت والصور المضحكة يومياً.. اضغط هنا للانضمام فوراً!</p>
+                <div class="btn-join">انضم للقناة الآن</div>
+            </div>
+        </a>
+
+        </div>
+
+</body>
+</html>
