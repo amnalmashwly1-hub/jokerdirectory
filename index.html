@@ -6,58 +6,66 @@
     <title>دليل الجوكر لقنوات واتساب</title>
     <style>
         :root { --neon: #00ff41; --bg: #0d0d0d; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; }
+        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 20px; }
         .container { border: 2px solid var(--neon); padding: 30px; border-radius: 15px; box-shadow: 0 0 20px var(--neon); max-width: 500px; margin: auto; }
         h1 { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid var(--neon); background: transparent; color: white; }
-        button { background: var(--neon); color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; transition: 0.3s; }
-        button:hover { box-shadow: 0 0 30px var(--neon); transform: scale(1.05); }
-        #result { margin-top: 20px; padding: 15px; border-top: 1px solid #333; display: none; }
-        img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--neon); margin-bottom: 10px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid var(--neon); background: transparent; color: white; text-align: center; }
+        button { background: var(--neon); color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%; }
+        #result { margin-top: 20px; padding: 15px; border-top: 1px solid #333; display: none; background: #1a1a1a; border-radius: 10px; }
+        .ch-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--neon); object-fit: cover; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>🃏 دليل الجوكر</h1>
-    <p>أدخل رابط قناة الواتساب لسحب البيانات</p>
+    <p>ضع رابط قناة الواتساب بالأسفل</p>
     
-    <input type="text" id="waUrl" placeholder="https://whatsapp.com/channel/...">
+    <input type="text" id="waUrl" placeholder="https://whatsapp.com/channel/..." value="https://whatsapp.com/channel/0029VaFDOVyGE56kJdojZ21y">
     <br>
-    <button onclick="extractData()">اسحب البيانات الآن</button>
+    <button onclick="fetchChannelData()">إظهار بيانات القناة الآن</button>
 
     <div id="result">
-        <img id="chImg" src="" alt="صورة القناة">
-        <h2 id="chName"></h2>
-        <p id="chDesc"></p>
+        <img id="chImg" class="ch-img" src="" alt="صورة القناة">
+        <h2 id="chName" style="color: var(--neon);"></h2>
+        <p id="chDesc" style="color: #ccc; font-size: 0.9em;"></p>
     </div>
 </div>
 
 <script>
-    async function extractData() {
+    async function fetchChannelData() {
         const url = document.getElementById('waUrl').value;
         const btn = document.querySelector('button');
-        
-        if(!url) return alert("ضع الرابط أولاً يا صديقي!");
+        if(!url) return alert("الرجاء وضع الرابط!");
 
-        btn.innerText = "جاري السحب...";
+        btn.innerText = "جاري استخراج البيانات...";
         
         try {
-            const response = await fetch('/api/extract', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url })
-            });
+            // استخدام خدمة جلب البيانات المباشرة
+            const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(url);
+            const response = await fetch(proxyUrl);
             const data = await response.json();
-            
+            const html = data.contents;
+
+            // إنشاء محرك بحث داخل الصفحة المجلوبة
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // استخراج الاسم والصورة والوصف من وسوم Meta
+            const name = doc.querySelector('meta[property="og:title"]')?.content || "قناة واتساب";
+            const img = doc.querySelector('meta[property="og:image"]')?.content || "";
+            const desc = doc.querySelector('meta[property="og:description"]')?.content || "لا يوجد وصف متاح";
+
+            // عرض النتائج في الموقع
             document.getElementById('result').style.display = 'block';
-            document.getElementById('chName').innerText = data.name;
-            document.getElementById('chImg').src = data.img;
-            document.getElementById('chDesc').innerText = data.desc;
+            document.getElementById('chName').innerText = name;
+            document.getElementById('chImg').src = img;
+            document.getElementById('chDesc').innerText = desc;
+
+            btn.innerText = "تم بنجاح! جرب رابط آخر";
         } catch (e) {
-            alert("حدث خطأ، تأكد أن الرابط صحيح!");
-        } finally {
-            btn.innerText = "اسحب البيانات الآن";
+            alert("فشل الجلب! تأكد من اتصالك بالإنترنت");
+            btn.innerText = "إظهار بيانات القناة الآن";
         }
     }
 </script>
